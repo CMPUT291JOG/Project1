@@ -1,4 +1,4 @@
-# Driver Licence Regestration
+# Licence Regestration
 # - record information needd to issuing a drive licence 
 # licence no.CHAR(15), sin CHAR(15), class VARCHAR(10), photo BLOB,
 # issuing_date DATE, expiring_date DATE, 

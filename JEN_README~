@@ -1,5 +1,9 @@
-# Driver Licence Regestration
-# - record information needd to issuing a drive licence 
+# Project1
+CMPUT 291 Project 1 Winter 2016
+
+# Driver Licence Regestration - record information needd to issuing a drive licence 
+# contains  the following: 
+#
 # licence no.CHAR(15), sin CHAR(15), class VARCHAR(10), photo BLOB,
 # issuing_date DATE, expiring_date DATE, 
 # PRIMARY KEY (licence_no), UNIQUE (sin), FOREIGN KEY (sin) REFERENCES people
