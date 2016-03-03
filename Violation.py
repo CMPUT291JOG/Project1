@@ -1,2 +1,0 @@
-# Violation Record
-# Gemma
