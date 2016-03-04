@@ -1,26 +1,28 @@
 # Project1
 CMPUT 291 Project 1 Winter 2016
 
-# Driver Licence Regestration - record information needd to issuing a drive licence 
-# contains  the following: 
+# **Driver Licence Registration** 
+# - record information needed to issuing a drive licence 
 #
+# includes the following: 
 # licence no.CHAR(15), sin CHAR(15), class VARCHAR(10), photo BLOB,
 # issuing_date DATE, expiring_date DATE, 
-# PRIMARY KEY (licence_no), UNIQUE (sin), FOREIGN KEY (sin) REFERENCES people
+#
+# PRIMARY KEY (licence_no), 
+# UNIQUE (sin), 
+# FOREIGN KEY (sin) REFERENCES people
 # assume image files are stored in a local disk system
 
-# Auto Transaction - allows the officer to enter infomaion to complete the transacion
-# details of seller, buyer, date and price
-#  s_date      date,
-#  price       numeric(9,2),
-#  t_id        CHAR(15),
-#  seller_id   CHAR(15),
-#  buyer_id    CHAR(15),
-#  vehicle_id  CHAR(15),
-#  officer_id  CHAR(15),
+# **Auto Transaction**
+# - allows the officer to enter information to complete the auto transacion
+# includes: details of seller, buyer, date and price
+#  s_date date, price numeric(9,2), t_id  CHAR(15), seller_id CHAR(15),
+#  buyer_id CHAR(15), vehicle_id CHAR(15), officer_id CHAR(15),
+#
 #  PRIMARY KEY (t_id),
 #  FOREIGN KEY (seller_id) REFERENCES people(sin),
 #  FOREIGN KEY (buyer_id) REFERENCES people(sin),
 #  FOREIGN KEY (vehicle_id) REFERENCES vehicle(serial_no),
 #  FOREIGN KEY (officer_id) REFERENCES registering_officer(id)
-# Jen
+
+ Jen
