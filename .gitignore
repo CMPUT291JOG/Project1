@@ -1,0 +1,10 @@
+# Log Files
+*.log
+
+*.out
+# Mac users
+.DS_Store
+
+# Temp save files
+*~
+.Rhistory
