@@ -1,6 +1,6 @@
-# Project1
 CMPUT 291 Project 1 Winter 2016
 
+Licence.py
 # **Driver Licence Registration** 
 # - record information needed to issuing a drive licence 
 #
@@ -13,6 +13,7 @@ CMPUT 291 Project 1 Winter 2016
 # FOREIGN KEY (sin) REFERENCES people
 # assume image files are stored in a local disk system
 
+Transaction.py
 # **Auto Transaction**
 # - allows the officer to enter information to complete the auto transacion
 # includes: details of seller, buyer, date and price
