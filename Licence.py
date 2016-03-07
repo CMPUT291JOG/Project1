@@ -19,10 +19,10 @@ def licence_input(cur):
     licence_num = ""  	# char
     sin = "" 		# char
     licence_class = ""	# char
-    photo = null      	# BLOB - from local disk
-    file = null
-    issuing_date = null 	# DATE
-    expiring_date = null # Date
+    photo = None      	# BLOB - from local disk
+    file = None
+    issuing_date = ""	# String to Date
+    expiring_date = ""  # String to Date
     blobvar = db.var(cx_Oracle.BLOB)
     try_again = 0
     issue = 1
@@ -46,7 +46,7 @@ def licence_input(cur):
 	print('Invalid licence class iput.')
 	licence_num = input ('Enter Licence class: ')
 
-    while file == null:
+    while file == None :
 	photo = input ('Insert photo path: ')
 	try:
 	    file = open (photo,'rb') 
@@ -56,6 +56,7 @@ def licence_input(cur):
     content = file.read ()
     file.close ()
 
+    # input for issuing_date
     while issue == 1:    
 	issuing_date = input ('Enter issuing date (ddmmyyyy): ')
 	if len(issuing_date) != 8:
@@ -69,8 +70,10 @@ def licence_input(cur):
 		continue
 	issue = 0
     
+    # reset issue to 1
     issue = 1
     
+    # input for expiring_date
     while issue == 1:    
 	    expiring_date = input ('Enter expiring date (ddmmyyyy): ')
 	    if len(expiring_date) != 8:
@@ -83,13 +86,13 @@ def licence_input(cur):
 		    print("invalid input")
 		    continue
 	    issue = 0    
-	
+	  
+    # convert string to date 
     datetime.datetime.strptime(issuing_date, "%d%m%Y").date()
     datetime.datetime.strptime(expiring_date, "%d%m%Y").date()
 
 
     try:
-
 	blobvar.setvalue(0,content)
 	sqlStr = "INSERT INTO Licence VALUES(licence_num, sin, lic_class, blobData, issuing_date, expiring_date"
 	cur.setinputsizes (blobData = cx_Oracle.BLOB)
@@ -108,3 +111,5 @@ def licence_input(cur):
 		print("invalid input")
 		try_again = 0
 		
+
+
