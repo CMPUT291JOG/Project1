@@ -6,8 +6,6 @@
 # vehicle and personal information about its new owners, if it is not in the database.
 # You may assume that all the information about vehicle types has been loaded in the initial database.
 
-import sys
-import cx_oracle
 
 def newVehicleRegistration(cur):
   checkExist()
