@@ -11,27 +11,16 @@ import cx_oracle
 
 def newVehicleRegistration(cur):
   checkExist()
-  
-  
-  
-  def checkExist:
+  vehicleInput()
+
+def checkExist:
     personExist = input('Does the person registering the vehicle already exist in the database? (y/n)')
     if (personExist == 'y' or 'Y'):
       # vehicle owner already exists, retrieve their table info?
     elif (personExist == 'n'or 'N'):
-      # must get person info table
-      # sin           CHAR(15),  
-      # name          VARCHAR(40),
-      # height        number(5,2),
-      # weight        number(5,2),
-      # eyecolor      VARCHAR (10),
-      # haircolor     VARCHAR(10),
-      # addr          VARCHAR2(50),
-      # gender        CHAR,
-      # birthday      DATE,
-      # PRIMARY KEY (sin),
-      # CHECK ( gender IN ('m', 'f') 
+      # birthday      DATE?? done right?
       
+      # GETTING PERSON info 
       sin = input('Enter Social Insurance number: ')
       while len(sin) > 15:
         print('Invalid SIN input [format XXXXXXXXX]')
@@ -73,13 +62,50 @@ def newVehicleRegistration(cur):
         haircolor = input('Enter registrants hair color: ')
         
       addr = input('Enter registrants address: ')
-      while len(addr) > 15:
-        print('Invalid address format [format first las]')
-        sin = input('Enter registering name: ')
+      while len(addr) > 50:
+        print('Invalid address format [only 50 characters]')
+        sin = input('Enter registrants address: ')
+      
+      gender = input('Enter registrants gender [m/f]: ')
+      while len(gender) > 1:
+        print('Invalid gender format [m/f]')
+        sin = input('Enter registrants gender [m/f]: ')
+      
+      birthday = input('Enter registrants birthday [ddmmyyyy]: ')
+      while len(birthday) > 8:
+        print('Invalid birthday format [ddmmyyyy]')
+        sin = input('Enter registrants birthday [ddmmyyyy]: ')
       
     else:
       print( 'Invalid Input, please answer this question again.')
       checkExist()
+      
+
+def vehicleInput():
+  try_again = 0
+  #all vehicle information in try/except, so if oracle returns error it can be individually handled
+  try:
+    serial_no = input('Please enter vehicle serial number: ')
+    maker = input('Please enter vehicle maker: ')
+    model = input('Please enter vehicle model: ')
+    year = input('Please enter vehicle year: ')
+    color = input('Please enter vehicle color: ')
+    type_id = input('Please enter type_id: ')
+    curs.execute("INSERT INTO vehicle VALUES(serial_no, maker, model, year, color, type_id))
+  except cx_Oracle.DatabaseError as exc:
+	  error = exc.args
+	  print( sys.stderr, "Oracle code:", error.code)
+	  print( sys.stderr, "Oracle message:", error.message)
+	  while try_again == 0:
+	    try_again = input('Would you like to try input again? (y/n)')
+	    if try_again == y:
+		    vehicleInput(cur)
+	    elif try_again == n:
+		    return
+	    else:
+		    print("invalid input")
+		    try_again = 0
+
 
 
 
