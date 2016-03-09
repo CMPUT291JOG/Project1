@@ -9,20 +9,11 @@
 # PRIMARY KEY (licence_no), UNIQUE (sin), FOREIGN KEY (sin) REFERENCES people
 # assume image files are stored in a local disk system
 # Reference python code from lab files
-import sys
-import cx_Oracle # the package used for accessing Oracle in Python
-import getpass # the package for getting password from user without displaying it
 
 def licence_input(cur):
   
     # create and initialize variables
-    licence_num = ""  	# char
-    sin = "" 		# char
-    licence_class = ""	# char
-    photo = None      	# BLOB - from local disk
     file = None
-    issuing_date = ""	# String to Date
-    expiring_date = ""  # String to Date
     blobvar = db.var(cx_Oracle.BLOB)
     try_again = 0
     issue = 1
@@ -39,12 +30,12 @@ def licence_input(cur):
     sin = input ('Enter Social insurance number: ')
     while len(sin) > 15:
 	print('Invalid SIN input.')
-	licence_num = input ('Enter Social insurance number: ')
+	sin = input ('Enter Social insurance number: ')
 
     licence_class = input ('Enter licence class: ')
     while len(licence_class) > 10:
 	print('Invalid licence class iput.')
-	licence_num = input ('Enter Licence class: ')
+	licence_classhg = input ('Enter Licence class: ')
 
     while file == None :
 	photo = input ('Insert photo path: ')
@@ -91,25 +82,32 @@ def licence_input(cur):
     datetime.datetime.strptime(issuing_date, "%d%m%Y").date()
     datetime.datetime.strptime(expiring_date, "%d%m%Y").date()
 
+    blobvar.setvalue(0,content)
+    sqlStr = "INSERT INTO Licence VALUES(licence_num, sin, lic_class, blobData, issuing_date, expiring_date"
+    cur.setinputsizes (blobData = cx_Oracle.BLOB)
 
     try:
-	blobvar.setvalue(0,content)
-	sqlStr = "INSERT INTO Licence VALUES(licence_num, sin, lic_class, blobData, issuing_date, expiring_date"
-	cur.setinputsizes (blobData = cx_Oracle.BLOB)
 	cur.execute (sqlStr, {'blobData': blobvar})
     except cx_Oracle.DatabaseError as exc:
-	error, = exc.args
-	print( sys.stderr, "Oracle code:", error.code)
-	print( sys.stderr, "Oracle message:", error.message)
-	while try_again == 0:
-	    try_again = input('Would you like to try input again? (y/n)')
+	print ("Licence or Sin number already in database. \nNo new entry created.")
+	while True:
+	    try_again = input('Would you like to try new input? (y/n)')
 	    if try_again == y:
 		licence_input(cur)
+		return
 	    elif try_again == n:
 		return
 	    else:
 		print("invalid input")
-		try_again = 0
 		
+    print("Input Successfull!")
 
-
+    while True:
+		try_again = input("Do you want to input another? (y/n)")
+		if try_again == y:
+		    licence_input(cur)
+		    return
+		elif try_again == n:
+		    return
+		else:
+		    print("invalid input")    
