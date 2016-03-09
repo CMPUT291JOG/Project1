@@ -25,18 +25,18 @@ def transaction_input(cur):
     
     # if s_date not valid, prompt proper message
     while complete == 1:    
-	s_date = input ('Enter selling date (ddmmyyyy): ')
+	s_date = input ('Enter sale date (ddmmyyyy): ')
 	if len(s_date) != 8:
 	    print("Invalid input")
 	    continue
 	else: 
 	    try: 
-		int(expiring_date)
+		int(s_date)
 	    except ValueError:
 		print("invalid input")
 		continue
 	    issue = 0    
-    
+    # convert to date format
     datetime.datetime.strptime(s_date, "%d%m%Y").date()
     
     # input for price with 2 decimals
