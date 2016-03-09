@@ -15,7 +15,7 @@ def licence_input(cur):
     # create and initialize variables
     file = None
     blobvar = db.var(cx_Oracle.BLOB)
-    try_again = 0
+    try_again = True
     issue = 1
     
 
@@ -102,7 +102,7 @@ def licence_input(cur):
 		
     print("Input Successfull!")
 
-    while True:
+    while try_again == True:
 		try_again = input("Do you want to input another? (y/n)")
 		if try_again == y:
 		    licence_input(cur)
@@ -110,4 +110,5 @@ def licence_input(cur):
 		elif try_again == n:
 		    return
 		else:
+		    try_again = True
 		    print("invalid input")    
