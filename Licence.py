@@ -83,13 +83,13 @@ def licence_input(cur):
     datetime.datetime.strptime(expiring_date, "%d%m%Y").date()
 
     blobvar.setvalue(0,content)
-    sqlStr = "INSERT INTO Licence VALUES(licence_num, sin, lic_class, blobData, issuing_date, expiring_date"
+    sqlStr = "INSERT INTO Licence VALUES(l_n, sin, l_c, blobData, i_d, e_d"
     cur.setinputsizes (blobData = cx_Oracle.BLOB)
 
     try:
-	cur.execute (sqlStr, {'blobData': blobvar})
+	cur.execute (sqlStr, {'l_n': licence_num, 'sin': sin, 'l_c': licence_class, 'blobData': blobvar, 'i_d': issuing_date, 'e_d': expiring_date"})
     except cx_Oracle.DatabaseError as exc:
-	print ("Licence or Sin number already in database. \nNo new entry created.")
+	print ("Licence or SIN already in database. \nNo new entry created.")
 	while True:
 	    try_again = input('Would you like to try new input? (y/n)')
 	    if try_again == y:
