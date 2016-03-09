@@ -17,7 +17,7 @@
 def transaction_input(cur):
   
     # create and initialize variables
-    try_again = 0
+    try_again = True
     complete = 1
     
     # assign inputs to variables
@@ -41,38 +41,50 @@ def transaction_input(cur):
     
     # input for price with 2 decimals
     while complete == 1:    
-	price = input ('Enter price (0.00): ')
 	try:
-	    if int(price) < 0:
-		print("Invalid sale price!")
+	    # get input as a float number
+	    price = input (float('Enter price (0.00): '))	
+	    # price cannot be less than 0
+	    if price < 0:
+		print("Invalid selling price!")
 		continue
+	    # pass check if it is a positive number
 	    else: 
 		complete = 0
+	# try again if it is not a number
 	except ValueError:
 	    print("invalid input")
 	    continue
+	# otherwise pass checking 
 	complete = 0  
-	
+    #convert price from float to two decimals
+    price = round(price, 2)
+    
+    # get transaction id and make sure less than 15 character
     t_id = input ('Enter transaction ID: ')
     while len(t_id) > 15:
 	print('Invalid transaction ID.')
 	t_id = input ('Enter transaction ID: ')
-	
+    
+    # get seller id and make sure less than 15 characters
     seller_id = input ('Enter seller ID: ')
     while len(seller_id) > 15:
 	print('Invalid seller ID.')
 	selle_id = input ('Enter transaction ID: ') 
     
+    # get buyer id and make sure less than 15 characters
     buyer_id = input ('Enter buyer ID: ')
     while len(buyer_id) > 15:
 	print('Invalid buyer ID.')
 	buyer_id = input ('Enter buyer ID: ')        
 
+    # get vehicle id and make sure less than 15 characters
     vehicle_id = input ('Enter vehicle ID: ')
     while len(vehicle_id) > 15:
 	print('Invalid vehicle ID.')
 	vehicle_id = input ('Enter vehicle ID: ')    
     
+    # get vehicle id and make sure less than 15 character    
     officer_id  = input ('Enter officer ID: ')
     while len(office_id) > 15:
 	print('Invalid officer ID.')
@@ -83,15 +95,19 @@ def transaction_input(cur):
 	                      seller_id: seller_id, buyer_id: buyer_id,
 	                      vehicle_id: vehicle_id, officer_id: officer_id})
     except cx_Oracle.DatabaseError as exc:
-	print ("Transaction already in database. \nNo new entry created.")
-	while True:
+	print ("Transaction already in database. \nNo new transaction created.")
+	while try_again == True:
 	    try_again = input('Would you like to try inputing transaction? (y/n)')
 	    if try_again == y:
 		licence_input(cur)
 		return
 	    elif try_again == n:
+		try_again = False
 		return
 	    else:
+		try_again = True
 		print("invalid input")
-		
+		continue
+	    
+    # if pass everything, print and save input
     print("Input Successfull!")
