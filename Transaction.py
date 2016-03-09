@@ -17,7 +17,7 @@
 def transaction_input(cur):
   
     # create and initialize variables
-    try_again = True
+    try_again = 0
     complete = 1
     
     # assign inputs to variables
@@ -35,7 +35,7 @@ def transaction_input(cur):
 	    except ValueError:
 		print("invalid input")
 		continue
-	    issue = 0    
+	    complete = 0    
     # convert to date format
     datetime.datetime.strptime(s_date, "%d%m%Y").date()
     
@@ -96,18 +96,16 @@ def transaction_input(cur):
 	                      vehicle_id: vehicle_id, officer_id: officer_id})
     except cx_Oracle.DatabaseError as exc:
 	print ("Transaction already in database. \nNo new transaction created.")
-	while try_again == True:
+	while True:
 	    try_again = input('Would you like to try inputing transaction? (y/n)')
 	    if try_again == y:
 		licence_input(cur)
 		return
 	    elif try_again == n:
-		try_again = False
 		return
 	    else:
-		try_again = True
 		print("invalid input")
-		continue
+		# continue ??
 	    
     # if pass everything, print and save input
     print("Input Successfull!")
