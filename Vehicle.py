@@ -47,7 +47,7 @@ def checkExist:
           int(weight)
         except ValueError: 
           print('Invalid weight format [format XXXXX.XX]')
-          we = input('Enter registrants weight: ')
+          weight = input('Enter registrants weight: ')
           
       eyecolor = input('Enter registrants eye color: ')
       while len(eyecolor) > 10:
