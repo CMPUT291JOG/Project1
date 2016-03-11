@@ -14,3 +14,43 @@
 #  vdate        date,
 #  place        varchar(20),
 #  descriptions varchar(1024),
+
+def violation_input(cur):
+  ticket_no = input('Enter Ticket Number: ')
+  try: 
+    int(ticket_no)
+  except ValueError:
+    print('Invalid Ticket Number format [Must be Integer]')
+    ticket_no = input('Enter Ticket Number: ')
+    
+  violator_no = input('Enter Violator Number: ')
+  while len(violator_no) > 15:
+    print('Invalid Violator Number Format [too long]')
+    violator_no = input('Enter Violator Number: ')
+    
+  vehicle_id = input('Enter Vehicle Identification: ')
+  while len(vehicle_id) > 15:
+    print('Invalid Vehicle Id Format [too long]')
+    vehicle_id = input('Enter Vehicle Identification: ')
+   
+  office_no = input('Enter Officer Number: ')
+  while len(office_no) > 15:
+    print('Invalid Officer Number Format [too long]')
+     office_no = input('Enter Officer Number: ') 
+     
+  vtype = input('Enter Violation Type: ')
+  while len(vtype) > 10:
+    print('Invalid Officer Number Format [too long]')
+    vtype = input('Enter Violation Type: ')
+    
+  vdate = input('Enter Violation Date [ddmmyyyy]: ')
+  while len(vdate) > 8:
+    print('Invalid Violation Date format')
+    vdate = input('Enter Violation Date [ddmmyyyy]: ')
+  
+  #varchar 20, presumably give more length than 20 characters but not sure how much more  
+  place = input('Enter Violation Place: ')
+  
+  descriptions = input('Enter Violation Description: ')
+
+
