@@ -16,41 +16,58 @@
 #  descriptions varchar(1024),
 
 def violation_input(cur):
-  ticket_no = input('Enter Ticket Number: ')
+  try_again = 0
   try: 
-    int(ticket_no)
-  except ValueError:
-    print('Invalid Ticket Number format [Must be Integer]')
     ticket_no = input('Enter Ticket Number: ')
-    
-  violator_no = input('Enter Violator Number: ')
-  while len(violator_no) > 15:
-    print('Invalid Violator Number Format [too long]')
+    try: 
+      int(ticket_no)
+    except ValueError:
+      print('Invalid Ticket Number format [Must be Integer]')
+      ticket_no = input('Enter Ticket Number: ')
+      
     violator_no = input('Enter Violator Number: ')
-    
-  vehicle_id = input('Enter Vehicle Identification: ')
-  while len(vehicle_id) > 15:
-    print('Invalid Vehicle Id Format [too long]')
+    while len(violator_no) > 15:
+      print('Invalid Violator Number Format [too long]')
+      violator_no = input('Enter Violator Number: ')
+      
     vehicle_id = input('Enter Vehicle Identification: ')
-   
-  office_no = input('Enter Officer Number: ')
-  while len(office_no) > 15:
-    print('Invalid Officer Number Format [too long]')
-     office_no = input('Enter Officer Number: ') 
+    while len(vehicle_id) > 15:
+      print('Invalid Vehicle Id Format [too long]')
+      vehicle_id = input('Enter Vehicle Identification: ')
      
-  vtype = input('Enter Violation Type: ')
-  while len(vtype) > 10:
-    print('Invalid Officer Number Format [too long]')
+    office_no = input('Enter Officer Number: ')
+    while len(office_no) > 15:
+      print('Invalid Officer Number Format [too long]')
+       office_no = input('Enter Officer Number: ') 
+       
     vtype = input('Enter Violation Type: ')
-    
-  vdate = input('Enter Violation Date [ddmmyyyy]: ')
-  while len(vdate) > 8:
-    print('Invalid Violation Date format')
+    while len(vtype) > 10:
+      print('Invalid Officer Number Format [too long]')
+      vtype = input('Enter Violation Type: ')
+      
     vdate = input('Enter Violation Date [ddmmyyyy]: ')
-  
-  #varchar 20, presumably give more length than 20 characters but not sure how much more  
-  place = input('Enter Violation Place: ')
-  
-  descriptions = input('Enter Violation Description: ')
-
+    while len(vdate) > 8:
+      print('Invalid Violation Date format')
+      vdate = input('Enter Violation Date [ddmmyyyy]: ')
+    
+    #varchar 20, presumably give more length than 20 characters but not sure how much more  
+    place = input('Enter Violation Place: ')
+    
+    #varchar 1024, not sure how much space to check for
+    descriptions = input('Enter Violation Description: ')
+    
+    curs.execute("INSERT INTO ticket VALUES(ticket_no, violator_no, vehicle_id, office_no, vtype, vdate, place, descriptions))
+   except cx_Oracle.DatabaseError as exc:
+	  error = exc.args
+	  print( sys.stderr, "Oracle code:", error.code)
+	  print( sys.stderr, "Oracle message:", error.message)
+	  while try_again == 0:
+	    try_again = input('Would you like to try input again? (y/n)')
+	    if try_again == y:
+		    violation_input(cur)
+	    elif try_again == n:
+		    return
+	    else:
+		    print("invalid input")
+		    try_again = 0
 
