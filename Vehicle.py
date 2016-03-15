@@ -84,11 +84,39 @@ def vehicleInput():
   #all vehicle information in try/except, so if oracle returns error it can be individually handled
   try:
     serial_no = input('Please enter vehicle serial number: ')
+    while len(serial_no) > 15:
+    	print('Invalid Serial Number length')
+    	serial_no = input('Please enter vehicle serial number: ')
+    	
     maker = input('Please enter vehicle maker: ')
+    while len(maker) > 20:
+    	print('Invalid Maker length')
+    	maker = input('Please enter vehicle maker: ')
+    	
     model = input('Please enter vehicle model: ')
-    year = input('Please enter vehicle year: ')
+    while len(model) > 20:
+    	print('Invalid Model length')
+    	model = input('Please enter vehicle model: ')
+    	
+    year = input('Please enter vehicle year [yyyy]: ')
+    while len(year) > 4:
+    	try: 
+          int(year)
+        except ValueError: 
+          print('Invalid year format [format yyyy]')
+          year = input('Please enter vehicle year [yyyy]: ')
+    	
     color = input('Please enter vehicle color: ')
+    while len(color) > 10:
+    	print('Invalid Color length')
+    	color = input('Please enter vehicle color: ')
+    	
     type_id = input('Please enter type_id: ')
+    try:
+    	int(type_id)
+    except ValueError:
+    	print('Invalid Type Id [numbers only]')
+    	type_id = input('Please enter type_id: ')
     curs.execute("INSERT INTO vehicle VALUES(serial_no, maker, model, year, color, type_id))
   except cx_Oracle.DatabaseError as exc:
 	  error = exc.args
