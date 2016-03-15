@@ -6,6 +6,9 @@
 # vehicle and personal information about its new owners, if it is not in the database.
 # You may assume that all the information about vehicle types has been loaded in the initial database.
 
+# how is it assigning these registering people to the following vehicle?
+# how are we assuring there is at least one primary owner?
+
 
 def newVehicleRegistration(cur):
   checkExist()
@@ -16,7 +19,6 @@ def checkExist:
     if (personExist == 'y' or 'Y'):
       # vehicle owner already exists, retrieve their table info?
     elif (personExist == 'n'or 'N'):
-      # birthday      DATE?? done right?
       
       # GETTING PERSON info 
       sin = input('Enter Social Insurance number: ')
@@ -31,8 +33,7 @@ def checkExist:
         
       height = input('Enter registrants height: ')
       while len(height) > 99999.99:
-        # first make sure its an int, try except
-        # second make sure its < 99999.99
+	# making sure its an int and larger than 99999.99
         try: 
           int(height)
         except ValueError: 
@@ -41,8 +42,6 @@ def checkExist:
           
       weight = input('Enter registrants weight: ')
       while len(weight) > 99999.99:
-        # first make sure its an int, try except
-        # second make sure its < 99999.99
         try: 
           int(weight)
         except ValueError: 
@@ -73,10 +72,43 @@ def checkExist:
       while len(birthday) > 8:
         print('Invalid birthday format [ddmmyyyy]')
         sin = input('Enter registrants birthday [ddmmyyyy]: ')
+        
+        
+     # converting birthday to sql date format
+    datetime.datetime.strptime(birthday, "%d%m%y").date()
+    
+    # inputting into database
+    sqlStr = 'INSERT INTO people VALUES(sin, name, height, weight, eyecolor, haircolor, addr, gender, birthday)
+    
+    try:
+	cur.execute (sqlStr)
+    except cx_Oracle.DatabaseError as exc:
+	print ("Person already in database. \nNo new entry created.")
+	while True:
+	    try_again = input('Would you like to try new input? (y/n)')
+	    if try_again == 'y' or 'Y':
+		checkExist(cur)
+		return
+	    elif try_again == 'n' or 'N':
+		return
+	    else:
+		print("invalid input")
+
+     
+     another_owner = input('Would you like to add another owner? (y/n)')
+     if another_owner == 'y' or 'Y':
+     	# goes to top of function
+     	checkExist()
+     else:
+     	# finishes loop to go to vehicle input 
+     	continue
+    
       
     else:
       print( 'Invalid Input, please answer this question again.')
       checkExist()
+      
+   
       
 
 def vehicleInput():
