@@ -50,11 +50,15 @@ def violation_input(cur):
       print('Invalid Violation Date format')
       vdate = input('Enter Violation Date [ddmmyyyy]: ')
     
-    #varchar 20, presumably give more length than 20 characters but not sure how much more  
     place = input('Enter Violation Place: ')
-    
-    #varchar 1024, not sure how much space to check for
+    while len(place) > 20:
+    	print('Invalid violation place length')
+    	place = input('Enter Violation Place: ')
+
     descriptions = input('Enter Violation Description: ')
+    while len(descriptions) > 1024:
+    	print('Invalid description length')
+    	descriptions = input('Enter Violation Description: ')
     
     curs.execute("INSERT INTO ticket VALUES(ticket_no, violator_no, vehicle_id, office_no, vtype, vdate, place, descriptions))
    except cx_Oracle.DatabaseError as exc:
