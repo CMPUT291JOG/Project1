@@ -1,15 +1,22 @@
-# python3 Licence.py
-# File for Project 1
-# edited: 03 Mar 2016 by Jen
-
-# Driver Licence Regestration
-# - record information needd to issuing a drive licence 
+# python3 Licence.py  -- Driver Licence Regestration -- For Project 1
+# edited: 15 Mar 2016 by Jen
+#########################################################
+# General information:
+# Record information as needed to issue a drive licence 
 # licence no.CHAR(15), sin CHAR(15), class VARCHAR(10), photo BLOB,
 # issuing_date DATE, expiring_date DATE, 
 # PRIMARY KEY (licence_no), UNIQUE (sin), FOREIGN KEY (sin) REFERENCES people
 # assume image files are stored in a local disk system
-# Reference python code from lab files
-
+#########################################################
+# Specific Requirement:   
+# -Register a new driver license (with photo) where the person does not exist in the database.
+# -New person should be added.
+# -Add driver license for an existing person in database.
+# -Add driver license of a person who already has a license.
+# -An error message should be shown.
+# Note: Most python code are referenced from lab files
+########################################################
+# Function for licence inputs
 def licence_input(cur):
   
     # create and initialize variables
@@ -18,10 +25,31 @@ def licence_input(cur):
     try_again = 0
     issue = 1
     
-
-    # assign inputs to variables
-    # should check input whether they are valid
+    # First, we need to check whether this person exists in database
+    # Search the person by SIN
+    sin = input ('Enter Social insurance number: ')
+    while len(sin) > 15:
+	print('Invalid SIN input.')
+	sin = input ('Enter Social insurance number: ')
+    # Try searching SIN from database
+    # For there is a match of SIN, pull the data then edit?
+    try:
+	cur.execute (sqlStr, {'sin': sin}
+    except  cx_Oracle.DatabaseError as exc:
+	print ("Edit Profile? (y/n) ")
+    
+    # add licence for existing person if none was added
+    # if licence already there, prompt error for any editing
+    
+    # if person not exists in database, get inputs and add to database?
+    # what if partial input? still going through all ??
+   
+    
+    # For the person not in database:
+    # before assigning inputs to variables
+    # checking whether inputs are valid
     # if not valid, prompt proper message
+    # if valid, then add all by insert
     licence_num = input ('Enter Licence number: ')
     while len(licence_num) > 15:
 	print('Invalid licence number input.')
