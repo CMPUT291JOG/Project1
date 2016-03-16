@@ -26,17 +26,16 @@ def licence_input(cur):
     issue = 1
     
     # First, we need to check whether this person exists in database
-    # Search the person by SIN
+    # get SIN input and search database
     sin = input ('Enter Social insurance number: ')
     while len(sin) > 15:
 	print('Invalid SIN input.')
 	sin = input ('Enter Social insurance number: ')
-    # Try searching SIN from database
+    # TODO: searching SIN from database
     # For there is a match of SIN, pull the data then edit?
     try:
 	cur.execute (sqlStr, {'sin': sin}
     except  cx_Oracle.DatabaseError as exc:
-	print ("Edit Profile? (y/n) ")
     
     # add licence for existing person if none was added
     # if licence already there, prompt error for any editing
