@@ -29,11 +29,28 @@ def violation_input(cur):
     while len(violator_no) > 15:
       print('Invalid Violator Number Format [too long]')
       violator_no = input('Enter Violator Number: ')
+    # Making sure Violator_no is a valid SIN number thats already existant
+    cur.execute('SELECT sin FROM people WHERE sin = %s) % (violator_no)
+    valid_people = cur.fetchall()
+    while valid people == 0:
+    	# sin match not found
+    	print('Violator Number doesnt exist, try again [must be registered sin number]')
+    	violator_no = input('Enter Violator Number: ')
+    	cur.execute('SELECT sin FROM people WHERE sin = %s) % (violator_no)
+        valid_people = cur.fetchall()
       
     vehicle_id = input('Enter Vehicle Identification: ')
     while len(vehicle_id) > 15:
       print('Invalid Vehicle Id Format [too long]')
       vehicle_id = input('Enter Vehicle Identification: ')
+    # making sure vehicle id is extant serial no
+    cur.execute('SELECT serial_no FROM vehicle WHERE serial_no = %s') % (vehicle_id)
+    serials = cur.fetchall()
+    while serials == 0:
+  	print('Vehicle ID Number doesnt exist, try again [must be registered serial number]')
+  	vehicle_id = input('Enter vehicle ID: ')
+	cur.execute('SELECT serial_no FROM vehicle WHERE serial_no = %s') % (vehicle_id)
+	serials = cur.fetchall()
      
     office_no = input('Enter Officer Number: ')
     while len(office_no) > 15:
