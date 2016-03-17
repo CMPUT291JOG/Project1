@@ -19,7 +19,8 @@ def personInput:
     # ask for sin to see if it exists
     sin = input('Enter the SIN of the vehicles primary owner: ')
     # assuming execute field operates like string formatting
-    cur.execute('SELECT sin FROM people WHERE sin = %s') % (sin)
+    check = 'SELECT sin FROM people WHERE sin =' + sin
+    cur.execute(check)
     sins = cur.fetchall()
     
     if (sins > 0):
