@@ -15,6 +15,7 @@ def newVehicleRegistration(cur):
   vehicleInput()
 
 def personInput:
+    try_again = 0
     # ask for sin to see if it exists
     sin = input('Enter the SIN of the vehicles primary owner: ')
     # assuming execute field operates like string formatting
@@ -79,7 +80,7 @@ def personInput:
         print('Invalid birthday format [ddmmyyyy]')
         sin = input('Enter registrants birthday [ddmmyyyy]: ')
         
-        
+     # following complete person info retrieval   
      # converting birthday to sql date format
     datetime.datetime.strptime(birthday, "%d%m%y").date()
     
@@ -104,24 +105,33 @@ def personInput:
      another_owner = input('Would you like to add another owner? (y/n)')
      if another_owner == 'y' or 'Y':
      	# goes to top of function
-     	personInput()
+     	personInput(cur)
      else:
      	# finishes loop to go to vehicle input 
      	continue
     
       
-    else:
-      print( 'Invalid Input, please answer this question again.')
-      personInput()
-      
    
       
-
-def vehicleInput():
+# HOW TO GUARANTEE AT LEAST ONE PRIMARY OWNER SETTING
+def vehicleInput(cur):
   try_again = 0
+  
   #all vehicle information in try/except, so if oracle returns error it can be individually handled
   try:
     serial_no = input('Please enter vehicle serial number: ')
+    # Query to make sure serial doesnt already exist in database
+    cur.execute('SELECT serial_no FROM vehicle WHERE serial_no = %s') % (serial_no)
+    serial_nos = cur.fetchall()
+    
+    if (serial_nos > 0):
+      # if query returns result, the sin exists therefore the
+      # vehicle registration cannot continue, return to beginning loop
+      vehicleInput(cur)
+      
+    else:
+    	continue
+    
     while len(serial_no) > 15:
     	print('Invalid Serial Number length')
     	serial_no = input('Please enter vehicle serial number: ')
@@ -155,7 +165,10 @@ def vehicleInput():
     except ValueError:
     	print('Invalid Type Id [numbers only]')
     	type_id = input('Please enter type_id: ')
-    curs.execute("INSERT INTO vehicle VALUES(serial_no, maker, model, year, color, type_id))
+    	
+    	
+  curs.execute("INSERT INTO vehicle VALUES(serial_no, maker, model, year, color, type_id))
+  
   except cx_Oracle.DatabaseError as exc:
 	  error = exc.args
 	  print( sys.stderr, "Oracle code:", error.code)
