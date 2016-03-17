@@ -1,0 +1,21 @@
+Design report For Licence
+
+Goal: registering driver license
+
+1) Start with user input of SIN and check input validity. 
+2) Use SIN input to search whether it already exists in the database. 
+3) If exists, display data and allow for editing.
+4) If not exists, continue with other inputs for new registration.
+
+
+5) Deal with case sensitive, upper and lower
+6) Allow null for all inputs
+7) Error for editing drive licence
+
+3. Driver Licence Registration
+
+    Register a new driver license (with photo) where the person does not exist in the database.
+         New person should be added.
+    Add driver license for an existing person in database.
+    Add driver license of a person who already has a license.
+        An error message should be shown.
