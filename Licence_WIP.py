@@ -16,39 +16,16 @@
 # -An error message should be shown.
 # Note: Most python code are referenced from lab files
 ########################################################
-# Function for licence inputs
-def licence_input(cur):
-    
+# Function for registering new licence
+def licence_new(cur):
+  
     # create and initialize variables
     file = None
     blobvar = db.var(cx_Oracle.BLOB)
     try_again = 0
     issue = 1
-    
-    # First, we need to check whether this person exists in database
-    # get SIN input, then search database
-    sin = input ('Enter Social insurance number: ')
-    while len(sin) > 15:
-	    print('Invalid SIN input.')
-	    sin = input ('Enter Social insurance number: ')
-    # TODO: searching SIN from database
-    # For there is a match of SIN, pull the data then edit?
-    try:
-	    cur.execute (sqlStr, {'sin': sin})
-    except  cx_Oracle.DatabaseError as exc:
-    
-    # add licence for existing person if none was added
-    # if licence already there, prompt error for any editing
-    
-    # if person not exists in database, get inputs and add to database?
-    # what if partial input? still going through all ??
-   
-    
-    # For the person not in database:
-    # before assigning inputs to variables
-    # checking whether inputs are valid
-    # if not valid, prompt proper message
-    # if valid, then add all by insert
+    Found = False
+
     licence_num = input ('Enter Licence number: ')
     while len(licence_num) > 15:
 	print('Invalid licence number input.')
@@ -62,7 +39,7 @@ def licence_input(cur):
     licence_class = input ('Enter licence class: ')
     while len(licence_class) > 10:
 	print('Invalid licence class iput.')
-	licence_classhg = input ('Enter Licence class: ')
+	licence_class = input ('Enter Licence class: ')
 
     while file == None :
 	photo = input ('Insert photo path: ')
@@ -137,4 +114,38 @@ def licence_input(cur):
 		elif try_again == n:
 		    return
 		else:
-		    print("invalid input")    
+		    print("invalid input")   
+    return
+
+def check_SIN(cur):
+    found = False;
+    
+    # get proper SIN input, then search database
+    sin = input ('Enter Social insurance number: ')
+    while len(sin) > 15:
+	    print('Invalid SIN input.')
+	    sin = input ('Enter Social insurance number: ')
+    
+    try:
+	    # select data
+	    cur.execute ("SELECT * from LICENCE")
+	    rows = curs.fetchall()
+	    #check each row for SIN
+	    for row in rows:
+	        if sin == rows[1]
+		found = True
+		    
+    except  cx_Oracle.DatabaseError as exc:
+    
+    # add licence for existing person if none was added
+    # if licence already there, prompt error for any editing
+    
+    # if person not exists in database, get inputs and add to database?
+    # what if partial input? still going through all ??
+   
+    
+    # For the person not in database:
+    # before assigning inputs to variables
+    # checking whether inputs are valid
+    # if not valid, prompt proper message
+    # if valid, then add all by insert    
