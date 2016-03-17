@@ -11,14 +11,20 @@
 
 
 def newVehicleRegistration(cur):
-  checkExist()
+  personInput()
   vehicleInput()
 
-def checkExist:
-    personExist = input('Does the person registering the vehicle already exist in the database? (y/n)')
-    if (personExist == 'y' or 'Y'):
-      # vehicle owner already exists, retrieve their table info?
-    elif (personExist == 'n'or 'N'):
+def personInput:
+    # ask for sin to see if it exists
+    sin = input('Enter the SIN of the vehicles primary owner: ')
+    # assuming execute field operates like string formatting
+    cur.execute('SELECT sin FROM people WHERE sin = %s') % (sin)
+    sins = cur.fetchall()
+    
+    if (sins > 0):
+      # if query returns result, the sin exists therefore the
+      # vehicle owner already exists in table, may need to set row to sin?
+    else:
       
       # GETTING PERSON info 
       sin = input('Enter Social Insurance number: ')
@@ -87,7 +93,7 @@ def checkExist:
 	while True:
 	    try_again = input('Would you like to try new input? (y/n)')
 	    if try_again == 'y' or 'Y':
-		checkExist(cur)
+		personInput(cur)
 		return
 	    elif try_again == 'n' or 'N':
 		return
@@ -98,7 +104,7 @@ def checkExist:
      another_owner = input('Would you like to add another owner? (y/n)')
      if another_owner == 'y' or 'Y':
      	# goes to top of function
-     	checkExist()
+     	personInput()
      else:
      	# finishes loop to go to vehicle input 
      	continue
@@ -106,7 +112,7 @@ def checkExist:
       
     else:
       print( 'Invalid Input, please answer this question again.')
-      checkExist()
+      personInput()
       
    
       
