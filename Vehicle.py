@@ -79,41 +79,37 @@ def personInput:
       while len(birthday) > 8:
         print('Invalid birthday format [ddmmyyyy]')
         sin = input('Enter registrants birthday [ddmmyyyy]: ')
-        
+         
      # following complete person info retrieval   
      # converting birthday to sql date format
-    datetime.datetime.strptime(birthday, "%d%m%y").date()
+      datetime.datetime.strptime(birthday, "%d%m%y").date()
     
     # inputting into database
-    sqlStr = 'INSERT INTO people VALUES(sin, name, height, weight, eyecolor, haircolor, addr, gender, birthday)
+      sqlStr = 'INSERT INTO people VALUES(sin, name, height, weight, eyecolor, haircolor, addr, gender, birthday)
     
-    try:
-	cur.execute (sqlStr)
-    except cx_Oracle.DatabaseError as exc:
+      try:
+      	cur.execute (sqlStr)
+      except cx_Oracle.DatabaseError as exc:
 	print ("Person already in database. \nNo new entry created.")
 	while True:
-	    try_again = input('Would you like to try new input? (y/n)')
-	    if try_again == 'y' or 'Y':
-		personInput(cur)
-		return
-	    elif try_again == 'n' or 'N':
-		return
-	    else:
-		print("invalid input")
-
-     
-     another_owner = input('Would you like to add another owner? (y/n)')
-     if another_owner == 'y' or 'Y':
-     	# goes to top of function
+		try_again = input('Would you like to try new input? (y/n)')
+		if try_again == 'y' or 'Y':
+			personInput(cur)
+			return
+		elif try_again == 'n' or 'N':
+			return
+		else:
+			print("invalid input")
+			
+    another_owner = input('Would you like to add another owner? (y/n)')
+    if another_owner == 'y' or 'Y':
+        # goes to top of function
      	personInput(cur)
-     else:
-     	# finishes loop to go to vehicle input 
+    else:
+     	# finishes loop to go to vehicle owner input 
      	continue
+ 
     
-      
-   
-      
-# HOW TO GUARANTEE AT LEAST ONE PRIMARY OWNER SETTING
 def vehicleInput(cur):
   try_again = 0
   
@@ -165,7 +161,7 @@ def vehicleInput(cur):
     except ValueError:
     	print('Invalid Type Id [numbers only]')
     	type_id = input('Please enter type_id: ')
-    	
+   
     	
   curs.execute("INSERT INTO vehicle VALUES(serial_no, maker, model, year, color, type_id))
   
@@ -182,7 +178,47 @@ def vehicleInput(cur):
 	    else:
 		    print("invalid input")
 		    try_again = 0
-
+		    
+  # Owner table entry
+  # Owner_id is the one of above entered sin number
+  
+  owner_id = input('Enter owner id [one of the entered SIN numbers]: ')
+  # Query to make sure owner sin exists, cant continue until matched
+  cur.execute('SELECT sin FROM people WHERE sin = %s') % (owner_id)
+  sins = cur.fetchall()
+  while sins == 0:
+  	# sin match not found
+  	print('Owner ID doesnt exist, try again [must be registered sin number]
+  	owner_id = input('Enter owner id: ')
+	cur.execute('SELECT sin FROM people WHERE sin = %s') % (owner_id)
+	sins = cur.fetchall()
+	
+  vehicle_id = input('Enter vehicle if [one of the entered serial numbers]: ')
+  # Query to make sure vehicle serial_no exists, cont continue until matched
+  cur.execute('SELECT serial_no FROM vehicle WHERE serial_no = %s') % (vehicle_id)
+  serials = cur.fetchall()
+  while serials == 0:
+  	print('Vehicle Number doesnt exist, try again [must be registered serial number]')
+  	vehicle_id = input('Enter vehicle ID: ')
+	cur.execute('SELECT serial_no FROM vehicle WHERE serial_no = %s') % (vehicle_id)
+	serials = cur.fetchall()
+	
+  is_primary_owner = input('Is this owner the primary vehicle owner? [ONLY answer y or n]')
+  if is_primary_owner == 'y':
+  	# if answering yes, need to make sure that there is not already a primary 
+  	# query returns this vehicles owners marked yes
+  	cur.execute('SELECT * FROM owner, vehicle WHERE vehicle.serial_no = owner.vehicle_id AND owner.is_primary_owner = \'y'')
+  	primaries = cur.fetchall()
+  	if primaries != 0:
+  		print('Primary owner already exists, not setting as primary owner and continuing')
+  		is_primary_owner = 'n'
+  
+  else:
+  	# no input, can be used, then continue
+  	continue
+    
+  
+     
 
 
 
