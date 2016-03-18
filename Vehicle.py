@@ -9,221 +9,246 @@
 # how is it assigning these registering people to the following vehicle?
 # how are we assuring there is at least one primary owner?
 
+def vehicleInput(cur):
 
-def newVehicleRegistration(cur):
-  personInput()
-  vehicleInput()
+	sin = input('Enter Owner SIN Number: ')
+	while len(sin) > 15:
+		print('Invalid SIN Number Format [too long]')
+		sin = input('Enter Owner SIN Number: ')
+	
+	valid_people = 'SELECT sin FROM people WHERE sin = :sin'
+	cur.execute(valid_people, {'sin', violator_no})
+	valid_people = cur.fetchall()
+	if len(valid_people) == 0:
+		# sin match not found
+		while True:
+			answer = insert("Person not in database, Register person?(y,n) \n\t")
+			if answer == 'y':
+				person_input(cur,sin)
+				break
+			elif try_again == 'n':
+				print("Back to Main Menu")
+				return
+			else:
+				print("Invalid Input")	
+	
+	is_primary_owner = input('Is this owner the primary vehicle owner? (y/n) \n\t')
+	while ((is_primary_owner != 'y') and (is_primary_owner != 'n')):
+		print ("Invalid Input")
+		is_primary_owner = input('Is this owner the primary vehicle owner? (y/n)\n\t')	
 
-def personInput:
-    try_again = 0
-    # ask for sin to see if it exists
-    sin = input('Enter the SIN of the vehicles primary owner: ')
-    # assuming execute field operates like string formatting
-    sins = 'SELECT sin FROM people WHERE sin = :sin'
-    cur.execute(sins,{'sin':sin})
-    sins = cur.fetchall()
-    
-    if (sins > 0):
-      # if query returns result, the sin exists therefore the
-      # vehicle owner already exists in table, may need to set row to sin?
-    else:
-      
-      # GETTING PERSON info 
-      sin = input('Enter Social Insurance number: ')
-      while len(sin) > 15:
-        print('Invalid SIN input [format XXXXXXXXX]')
-        sin = input('Enter Social Insurance number: ')
-        
-      name = input('Enter registering name: ')
-      while len(name) > 15:
-        print('Invalid name format [format first last]')
-        sin = input('Enter registering name: ')
-        
-      height = input('Enter registrants height: ')
-      while len(height) > 99999.99:
-	# making sure its an int and larger than 99999.99
-        try: 
-          int(height)
-        except ValueError: 
-          print('Invalid height format [format XXXXX.XX]')
-          sin = input('Enter registrants height: ')
-          
-      weight = input('Enter registrants weight: ')
-      while len(weight) > 99999.99:
-        try: 
-          int(weight)
-        except ValueError: 
-          print('Invalid weight format [format XXXXX.XX]')
-          weight = input('Enter registrants weight: ')
-          
-      eyecolor = input('Enter registrants eye color: ')
-      while len(eyecolor) > 10:
-        print('Invalid eyecolor format [format XXXXXXXXXX]')
-        eyecolor = input('Enter registering eye color: ')
-        
-      haircolor = input('Enter registrants hair color: ')
-      while len(haircolor) > 15:
-        print('Invalid hair color format [format XXXXXXXXXX]')
-        haircolor = input('Enter registrants hair color: ')
-        
-      addr = input('Enter registrants address: ')
-      while len(addr) > 50:
-        print('Invalid address format [only 50 characters]')
-        sin = input('Enter registrants address: ')
-      
-      gender = input('Enter registrants gender [m/f]: ')
-      while len(gender) > 1:
-        print('Invalid gender format [m/f]')
-        sin = input('Enter registrants gender [m/f]: ')
-      
-      birthday = input('Enter registrants birthday [ddmmyyyy]: ')
-      while len(birthday) > 8:
-        print('Invalid birthday format [ddmmyyyy]')
-        sin = input('Enter registrants birthday [ddmmyyyy]: ')
-         
-     # following complete person info retrieval   
-     # converting birthday to sql date format
-      birthday = datetime.datetime.strptime(birthday, "%d%m%y").date()
-    
-    # inputting into database
-      sqlStr = 'INSERT INTO people VALUES(sin, name, height, weight, eyecolor, haircolor, addr, gender, birthday)
-    
-      try:
-      	cur.execute (sqlStr)
-      except cx_Oracle.DatabaseError as exc:
-	print ("Person already in database. \nNo new entry created.")
 	while True:
-		try_again = input('Would you like to try new input? (y/n)')
-		if try_again == 'y' or 'Y':
-			personInput(cur)
+		serial_no = input('Please enter vehicle serial number: ')
+		while len(serial_no) > 15:
+			print('Invalid Serial Number length')
+			serial_no = input('Please enter vehicle serial number: ')
+		
+		# Query to make sure serial doesnt already exist in database
+		serials = 'SELECT serial_no FROM vehicle WHERE serial_no = :serial_no'
+		cur.execute(serials, {'serial_no', vehicle_id})
+		inDb = cur.fetchall()
+		if len(inDb) == 0:
+			break
+		else:
+			answer = insert("Vehicle already regestered, try new Vehicle?(y,n) \n\t")
+			if answer == 'y':
+				continue
+			elif try_again == 'n':
+				print("Back to Main Menu")
+				return
+			else:
+				print("Invalid Input")			
+	 	
+	maker = input('Please enter vehicle maker: ')
+	while len(maker) > 20:
+		print('Invalid Maker length')
+		maker = input('Please enter vehicle maker: ')
+		
+	model = input('Please enter vehicle model: ')
+	while len(model) > 20:
+		print('Invalid Model length')
+		model = input('Please enter vehicle model: ')
+	
+	while True:
+		year = input('Please enter vehicle year [yyyy]: ')
+		if len(year) != 4:
+			print('Invalid Year')
+			continue
+		else:
+			try:
+				year = int(year)
+			except ValueError:
+				print('Invalid Year')
+				continue
+			break
+		
+	color = input('Please enter vehicle color: ')
+	while len(color) > 10:
+		print('Invalid Color length')
+		color = input('Please enter vehicle color: ')
+		
+	
+	while True :
+		type_id = input('Please enter type_id: ')
+		try: 
+			int(type_id)
+		except ValueError:
+			print('Invalid type Id format [Must be Integer]')
+			continue
+		
+		types = 'SELECT type_id FROM vehicle_type WHERE type_id = :type_id'
+		cur.execute(types, {'type_id', type_id})
+		exists = cur.fetchall()
+		if len(exists) > 0:
+			break
+		else:
+			print("Type ID does not exist")	
+	
+	sqlstr = "INSERT INTO vehicle VALUES(:serial_no, :maker, :model, :year, :color, :type_id"
+	try:
+		curs.execute(sqlstr, {'serial_no':serial_no, 'maker':maker, 'model':model, 'year':year, 'color':color, 'type_id':type_id})
+  
+	except cx_Oracle.DatabaseError as exc:
+		error = exc.args[0]
+		print( sys.stderr, "Oracle code:", error.code)
+		print( sys.stderr, "Oracle message:", error.message)
+				
+	# Owner table entry
+	# Owner_id is the one of above entered sin number
+
+	while True:
+	
+		sqlstr = "INSERT INTO owner VALUES(:owner_id, :vehicle_id, :is_primary_owner"
+		try:
+			curs.execute(sqlstr, {'owner_id':sin, 'vehicle_id':serial_no, 'is_primary_owner':is_primary_owner})
+		except cx_Oracle.DatabaseError as exc:
+			error = exc.args[0]
+			print( sys.stderr, "Oracle code:", error.code)
+			print( sys.stderr, "Oracle message:", error.message)  
+		
+		while True:
+			answer = input("Add another Owner?(y/n)\n\t")
+			if answer == "y":
+			
+				sin = input('Enter Owner SIN Number: ')
+				while len(sin) > 15:
+					print('Invalid SIN Number Format [too long]')
+					sin = input('Enter Owner SIN Number: ')
+					  
+				valid_people = 'SELECT sin FROM people WHERE sin = :sin'
+				cur.execute(valid_people, {'sin', violator_no})
+				valid_people = cur.fetchall()
+				if len(valid_people) == 0:
+					# sin match not found
+					while True:
+						answer = insert("Person not in database, Register person?(y,n) \n\t")
+						if answer == 'y':
+							person_input(cur,sin)
+							break
+						elif try_again == 'n':
+							print("Back to Main Menu")
+							return
+						else:
+							print("Invalid Input")	
+				
+				is_primary_owner = input('Is this owner the primary vehicle owner? (y/n) \n\t')
+				while ((is_primary_owner != 'y') and (is_primary_owner != 'n')):
+					print ("Invalid Input")
+					is_primary_owner = input('Is this owner the primary vehicle owner? (y/n)\n\t')				
+				
+				break
+			elif answer == 'n':
+				break
+			else:
+				print("invalid input")
+				continue
+			
+		if answer == "y":
+			continue
+		else:
+			break
+		
+	print("Input Successfull!")
+	
+	while True:
+		try_again = input("Do you want to input another? (y/n)")
+		if try_again == 'y':
+			violation_input(cur)
 			return
-		elif try_again == 'n' or 'N':
+		elif try_again == 'n':
 			return
 		else:
+			print("invalid input") 
+
+
+def person_input(cur, sin):
+	
+	name = input('Enter Name: ')
+	while len(name) > 15:
+		print('Invalid Name format [max 15 char]')
+		sin = input('Enter Name: ')
+	
+	while True:
+		height = input('Enter registrants height: ')
+		if len(height) > 8:
 			print("invalid input")
-			
-    another_owner = input('Would you like to add another owner? (y/n)')
-    if another_owner == 'y' or 'Y':
-        # goes to top of function
-     	personInput(cur)
-    else:
-     	# finishes loop to go to vehicle owner input 
-     	continue
- 
-    
-def vehicleInput(cur):
-  try_again = 0
-  
-  #all vehicle information in try/except, so if oracle returns error it can be individually handled
-  try:
-    serial_no = input('Please enter vehicle serial number: ')
-    # Query to make sure serial doesnt already exist in database
-    cur.execute('SELECT serial_no FROM vehicle WHERE serial_no = :serial_no') % (serial_no)
-    serial_nos = cur.fetchall()
-    
-    if (serial_nos > 0):
-      # if query returns result, the sin exists therefore the
-      # vehicle registration cannot continue, return to beginning loop
-      vehicleInput(cur)
-      
-    else:
-    	continue
-    
-    while len(serial_no) > 15:
-    	print('Invalid Serial Number length')
-    	serial_no = input('Please enter vehicle serial number: ')
-    	
-    maker = input('Please enter vehicle maker: ')
-    while len(maker) > 20:
-    	print('Invalid Maker length')
-    	maker = input('Please enter vehicle maker: ')
-    	
-    model = input('Please enter vehicle model: ')
-    while len(model) > 20:
-    	print('Invalid Model length')
-    	model = input('Please enter vehicle model: ')
-    	
-    year = input('Please enter vehicle year [yyyy]: ')
-    while len(year) > 4:
-    	try: 
-          int(year)
-        except ValueError: 
-          print('Invalid year format [format yyyy]')
-          year = input('Please enter vehicle year [yyyy]: ')
-    	
-    color = input('Please enter vehicle color: ')
-    while len(color) > 10:
-    	print('Invalid Color length')
-    	color = input('Please enter vehicle color: ')
-    	
-    type_id = input('Please enter type_id: ')
-    try:
-    	int(type_id)
-    except ValueError:
-    	print('Invalid Type Id [numbers only]')
-    	type_id = input('Please enter type_id: ')
-   
-    	
-  curs.execute("INSERT INTO vehicle VALUES(serial_no, maker, model, year, color, type_id))
-  
-  except cx_Oracle.DatabaseError as exc:
-	  error = exc.args
-	  print( sys.stderr, "Oracle code:", error.code)
-	  print( sys.stderr, "Oracle message:", error.message)
-	  while try_again == 0:
-	    try_again = input('Would you like to try input again? (y/n)')
-	    if try_again == y:
-		    vehicleInput(cur)
-	    elif try_again == n:
-		    return
-	    else:
-		    print("invalid input")
-		    try_again = 0
+			continue
+		else:
+			try: 
+				float(height)
+			except ValueError: 
+				print('Invalid height format')
+				continue
+			break
+
+	
+	while True:
+		weight = input('Enter registrants weight: ')
+		if len(weight) > 8:
+			print("invalid input")
+			continue
+		else:
+			try: 
+				float(weight)
+			except ValueError: 
+				print('Invalid height format')
+				continue
+			break
+		  
+	eyecolor = input('Enter registrants eye color: ')
+	while len(eyecolor) > 10:
+		print('Invalid eyecolor format [max 10 char]')
+		eyecolor = input('Enter registering eye color: ')
+		
+	haircolor = input('Enter registrants hair color: ')
+	while len(haircolor) > 15:
+		print('Invalid hair color format [max 15 char]')
+		haircolor = input('Enter registrants hair color: ')
+		
+	addr = input('Enter registrants address: ')
+	while len(addr) > 50:
+		print('Invalid address format [only 50 characters]')
+		sin = input('Enter registrants address: ')
+	  
+	gender = input('Enter registrants gender [m/f]: ')
+	while ((gender != 'm') and (gender != 'f')):
+		print('Invalid gender format [m/f]')
+		sin = input('Enter registrants gender [m/f]: ')
+	  
+	birthday = input('Enter registrants birthday [ddmmyyyy]: ')
+	while len(birthday) != 8:
+		print('Invalid birthday format [ddmmyyyy]')
+		sin = input('Enter registrants birthday [ddmmyyyy]: ')
 		    
-  # Owner table entry
-  
-  owner_id = input('Enter owner id [one of the entered SIN numbers]: ')
-  # Query to make sure owner sin exists, cant continue until matched
-  sins = 'SELECT sin FROM people WHERE sin = :owner_id'
-  cur.execute(sins,{'sins':sin})
-  sins = cur.fetchall()
-  while sins == 0:
-  	# sin match not found
-  	print('Owner ID doesnt exist, try again [must be registered sin number]
-  	owner_id = input('Enter owner id: ')
-	sins = 'SELECT sin FROM people WHERE sin = :owner_id'
-  	cur.execute(sins,{'sins':sin})
-  	sins = cur.fetchall()
+	# converting birthday to sql date format
+	birthday = datetime.datetime.strptime(birthday, "%d%m%y").date()
 	
-  vehicle_id = input('Enter vehicle if [one of the entered serial numbers]: ')
-  # Query to make sure vehicle serial_no exists, cont continue until matched
-  serials = cur.execute'SELECT serial_no FROM vehicle WHERE serial_no = :vehicle_id'
-  cur.execute(serials,{'serial_no':serial_no})
-  serials = cur.fetchall()
-  while serials == 0:
-  	print('Vehicle Number doesnt exist, try again [must be registered serial number]')
-  	vehicle_id = input('Enter vehicle ID: ')
-	serials = cur.execute'SELECT serial_no FROM vehicle WHERE serial_no = :vehicle_id'
-  	cur.execute(serials,{'serial_no':serial_no})
-  	serials = cur.fetchall()
+	# inputting into database
+	sqlStr = 'INSERT INTO people VALUES(:sin, :name, :height, :weight, :eyecolor, :haircolor, :addr, :gender, :birthday)'
 	
-  is_primary_owner = input('Is this owner the primary vehicle owner? [ONLY answer y or n]')
-  if is_primary_owner == 'y':
-  	# if answering yes, need to make sure that there is not already a primary 
-  	# query returns this vehicles owners marked yes
-  	primaries = ('SELECT * FROM owner, vehicle WHERE vehicle.serial_no = owner.vehicle_id AND owner.is_primary_owner = \'y'')
-  	cur.execute(primaries, {# OMAR, NOT SURE WHAT VARIABLE WE ARE CALLING HERE
-  	primaries = cur.fetchall()
-  	if primaries != 0:
-  		print('Primary owner already exists, not setting as primary owner and continuing')
-  		is_primary_owner = 'n'
-  
-  else:
-  	# no input, can be used, then continue
-  	continue
-    
-  
-     
-
-
-
+	try:
+	  	cur.execute (sqlStr, {'sin':sin, 'name':name, 'height':height, 'weight':weight, 'eyecolor':eyecolor, 'haircolor':haircolor, 'addr':addr, 'gender':gender, 'birthday':birthday})
+	except cx_Oracle.DatabaseError as exc:
+		error = exc.args[0]
+		print( sys.stderr, "Oracle code:", error.code)
+		print( sys.stderr, "Oracle message:", error.message)
