@@ -12,29 +12,61 @@
 # -Register a new driver license (with photo) where the person does not exist in the database.
 # -New person should be added.
 # -Add driver license for an existing person in database.
-# -Add driver license of a person who already has a license.
-# -An error message should be shown.
+# -Add driver license of a person who already has a license. An error message should be shown.
 # Note: Most python code are referenced from lab files
 ########################################################
-# Function for registering new licence
-def licence_new(cur):
-  
+def licence_main(cur):
+
+    ## create and initialize variables
+    #file = None
+    #blobvar = db.var(cx_Oracle.BLOB)
+    #try_again = 0
+    #issue = 1
+    
+
+    sin = input ('Enter Social insurance number: ')
+    while len(sin) > 15:
+	print('Invalid SIN input.')
+	sin = input ('Enter Social insurance number: ')
+	
+    check = "SELECT SIN FROM driver_licence WHERE SIN = sin" 
+    cur.execute(check)   
+    rows = cur.fetchall()
+    
+    if (rows != 0):
+	# if query returns result, the sin exists therefore check licence
+	if row[0] != null:
+	    print ("Licence already exists in database and cannot be edited!")
+	# if no licence exists, just add one
+	else:
+	    licence_num = input ('Enter Licence number: ')
+	    while len(licence_num) > 15:
+		print('Invalid licence number input.')
+		licence_num = input ('Enter Licence number: ')	
+	    # call input function for the rest
+	    licence_input()
+    # if query empty then input for sin and licence 
+    # then call input function for the rest
+    else:
+	sin = input ('Enter Social insurance number: ')
+	while len(sin) > 15:
+	    print('Invalid SIN input.')
+	    sin = input ('Enter Social insurance number: ')
+	
+	licence_num = input ('Enter Licence number: ')
+	while len(licence_num) > 15:
+	    print('Invalid licence number input.')
+	    licence_num = input ('Enter Licence number: ')	    
+	licence_input()	
+    return
+
+	    
+def licence_input():
     # create and initialize variables
     file = None
     blobvar = db.var(cx_Oracle.BLOB)
     try_again = 0
     issue = 1
-    Found = False
-
-    licence_num = input ('Enter Licence number: ')
-    while len(licence_num) > 15:
-	print('Invalid licence number input.')
-	licence_num = input ('Enter Licence number: ')
-	    	
-    sin = input ('Enter Social insurance number: ')
-    while len(sin) > 15:
-	print('Invalid SIN input.')
-	sin = input ('Enter Social insurance number: ')
 
     licence_class = input ('Enter licence class: ')
     while len(licence_class) > 10:
@@ -100,52 +132,19 @@ def licence_new(cur):
 		licence_input(cur)
 		return
 	    elif try_again == n:
-		return
-	    else:
 		print("invalid input")
 		
     print("Input Successfull!")
 
     while True:
-		try_again = input("Do you want to input another? (y/n)")
-		if try_again == y:
-		    licence_input(cur)
-		    return
-		elif try_again == n:
-		    return
-		else:
-		    print("invalid input")   
-    return
-
-def check_SIN(cur):
-    found = False;
-    
-    # get proper SIN input, then search database
-    sin = input ('Enter Social insurance number: ')
-    while len(sin) > 15:
-	    print('Invalid SIN input.')
-	    sin = input ('Enter Social insurance number: ')
-    
-    try:
-	    # select data
-	    cur.execute ("SELECT * from LICENCE")
-	    rows = curs.fetchall()
-	    #check each row for SIN
-	    for row in rows:
-	        if sin == rows[1]
-		found = True
-		    
-    except  cx_Oracle.DatabaseError as exc:
-    
-    # add licence for existing person if none was added
-    # if licence already there, prompt error for any editing
-    
-    # if person not exists in database, get inputs and add to database?
-    # what if partial input? still going through all ??
-   
-    
-    # For the person not in database:
-    # before assigning inputs to variables
-    # checking whether inputs are valid
-    # if not valid, prompt proper message
-    # if valid, then add all by insert    
+	try_again = input("Do you want to input another? (y/n)")
+	if try_again == y:
+	    licence_input(cur)
+	    return
+	elif try_again == n:
+	    return
+	else:
+		return
+	    else:
+		print("invalid input")   
+    return	    
