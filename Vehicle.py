@@ -19,8 +19,8 @@ def personInput:
     # ask for sin to see if it exists
     sin = input('Enter the SIN of the vehicles primary owner: ')
     # assuming execute field operates like string formatting
-    check = 'SELECT sin FROM people WHERE sin =' + sin
-    cur.execute(check)
+    sins = 'SELECT sin FROM people WHERE sin = :sin'
+    cur.execute(sins,{'sin':sin})
     sins = cur.fetchall()
     
     if (sins > 0):
@@ -83,7 +83,7 @@ def personInput:
          
      # following complete person info retrieval   
      # converting birthday to sql date format
-      datetime.datetime.strptime(birthday, "%d%m%y").date()
+      birthday = datetime.datetime.strptime(birthday, "%d%m%y").date()
     
     # inputting into database
       sqlStr = 'INSERT INTO people VALUES(sin, name, height, weight, eyecolor, haircolor, addr, gender, birthday)
@@ -118,7 +118,7 @@ def vehicleInput(cur):
   try:
     serial_no = input('Please enter vehicle serial number: ')
     # Query to make sure serial doesnt already exist in database
-    cur.execute('SELECT serial_no FROM vehicle WHERE serial_no = %s') % (serial_no)
+    cur.execute('SELECT serial_no FROM vehicle WHERE serial_no = :serial_no') % (serial_no)
     serial_nos = cur.fetchall()
     
     if (serial_nos > 0):
@@ -181,34 +181,38 @@ def vehicleInput(cur):
 		    try_again = 0
 		    
   # Owner table entry
-  # Owner_id is the one of above entered sin number
   
   owner_id = input('Enter owner id [one of the entered SIN numbers]: ')
   # Query to make sure owner sin exists, cant continue until matched
-  cur.execute('SELECT sin FROM people WHERE sin = %s') % (owner_id)
+  sins = 'SELECT sin FROM people WHERE sin = :owner_id'
+  cur.execute(sins,{'sins':sin})
   sins = cur.fetchall()
   while sins == 0:
   	# sin match not found
   	print('Owner ID doesnt exist, try again [must be registered sin number]
   	owner_id = input('Enter owner id: ')
-	cur.execute('SELECT sin FROM people WHERE sin = %s') % (owner_id)
-	sins = cur.fetchall()
+	sins = 'SELECT sin FROM people WHERE sin = :owner_id'
+  	cur.execute(sins,{'sins':sin})
+  	sins = cur.fetchall()
 	
   vehicle_id = input('Enter vehicle if [one of the entered serial numbers]: ')
   # Query to make sure vehicle serial_no exists, cont continue until matched
-  cur.execute('SELECT serial_no FROM vehicle WHERE serial_no = %s') % (vehicle_id)
+  serials = cur.execute'SELECT serial_no FROM vehicle WHERE serial_no = :vehicle_id'
+  cur.execute(serials,{'serial_no':serial_no})
   serials = cur.fetchall()
   while serials == 0:
   	print('Vehicle Number doesnt exist, try again [must be registered serial number]')
   	vehicle_id = input('Enter vehicle ID: ')
-	cur.execute('SELECT serial_no FROM vehicle WHERE serial_no = %s') % (vehicle_id)
-	serials = cur.fetchall()
+	serials = cur.execute'SELECT serial_no FROM vehicle WHERE serial_no = :vehicle_id'
+  	cur.execute(serials,{'serial_no':serial_no})
+  	serials = cur.fetchall()
 	
   is_primary_owner = input('Is this owner the primary vehicle owner? [ONLY answer y or n]')
   if is_primary_owner == 'y':
   	# if answering yes, need to make sure that there is not already a primary 
   	# query returns this vehicles owners marked yes
-  	cur.execute('SELECT * FROM owner, vehicle WHERE vehicle.serial_no = owner.vehicle_id AND owner.is_primary_owner = \'y'')
+  	primaries = ('SELECT * FROM owner, vehicle WHERE vehicle.serial_no = owner.vehicle_id AND owner.is_primary_owner = \'y'')
+  	cur.execute(primaries, {# OMAR, NOT SURE WHAT VARIABLE WE ARE CALLING HERE
   	primaries = cur.fetchall()
   	if primaries != 0:
   		print('Primary owner already exists, not setting as primary owner and continuing')
