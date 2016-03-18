@@ -162,19 +162,23 @@ def vehicle_input(cur):
 				valid_people = "SELECT sin FROM people WHERE sin = '$s'" % (sin)
 				cur.execute(valid_people)
 				valid_people = cur.fetchall()
+				# if result empty, no match for SIN
 				if len(valid_people) == 0:
-					# sin match not found
+					# while SIN not found, check with user to register person or not
 					while True:
 						answer = insert("Person not in database, Register person?(y,n) \n\t")
+						# if register person, call for inputting person data
 						if answer == 'y':
 							person_input(cur,sin)
 							break
+						# if not registering person, back to main menu
 						elif try_again == 'n':
 							print("Back to Main Menu")
 							return
+						# otherwise error message
 						else:
 							print("Invalid Input")	
-				
+				# try to check with user where this person is primary vehicle owner, with proper input
 				is_primary_owner = input('Is this owner the primary vehicle owner? (y/n) \n\t')
 				while ((is_primary_owner != 'y') and (is_primary_owner != 'n')):
 					print ("Invalid Input")
