@@ -1,12 +1,13 @@
 Design report 
 
-For licence registration, the goal is to register a drive licence.
+For licence registration, the goal is to register a driver licence.
 The program begins by SIN input.
-Since SIN is unqiue, the program will use that to check if there exists a drive licence with the specified SIN.
-If there exists a driver licence, the program prints an error message for any attempt of editing drive licence.
-Otherwise, the program checks whether the person's record exists in the database.
-If the person's record does not exists, the program adds a new person's record and a new driver licence registration.
-Otherwise the program adds a driver licence to the existing person's record.
+Since SIN is unqiue, the program will use that to check whether there is a driver licence registered with the specified SIN.
+If there exists a driver licence, the program prints an error message for any attempt to edit the registered driver licence.
+Otherwise, the program checks whether the person is in the database by SIN.
+If the person is not in database, the program will add a new person and continue with driver licence registration.
+If the person is in database, the program will just add a driver licence to the existing person's record.
+
 
 For auto transaction, the goal is to allows an officer to enter infomaion with respect to the details of
 seller, buyer, date, and price to complete the transaction.
