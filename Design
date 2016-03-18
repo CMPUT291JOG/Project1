@@ -1,21 +1,20 @@
-Design report For Licence
+Design report 
 
-Goal: registering driver license
+For licence registration, the goal is to register a drive licence.
+The program begins by SIN input.
+Since SIN is unqiue, the program will use that to check if there exists a drive licence with the specified SIN.
+If there exists a driver licence, the program prints an error message for any attempt of editing drive licence.
+Otherwise, the program checks whether the person's record exists in the database.
+If the person's record does not exists, the program adds a new person's record and a new driver licence registration.
+Otherwise the program adds a driver licence to the existing person's record.
 
-1) Start with user input of SIN and check input validity. 
-2) Use SIN input to search whether it already exists in the database. 
-3) If exists, display data and allow for editing.
-4) If not exists, continue with other inputs for new registration.
-
-
-5) Deal with case sensitive, upper and lower
-6) Allow null for all inputs
-7) Error for editing drive licence
-
-3. Driver Licence Registration
-
-    Register a new driver license (with photo) where the person does not exist in the database.
-         New person should be added.
-    Add driver license for an existing person in database.
-    Add driver license of a person who already has a license.
-        An error message should be shown.
+For auto transaction, the goal is to allows an officer to enter infomaion with respect to the details of
+seller, buyer, date, and price to complete the transaction.
+First, the program prompts for buyer ID and check whether the buyer exist in the database.
+If not found, the program gets buyer information and adds a new person to the database.
+Second, the program gets vehicle ID and seller ID and check whether the vehicle exists in database.
+If it exists, program continues. Otherwise, the program adds vehicle record in order to continue.
+Once vehicle ID is confirmed, the program match seller ID with the owner(s) of the vehicle.
+If the seller is not an owner, the program prints an error message.
+Otherwise, seller is confirmed as an owner, the office can continue to enter the rest of the information accordingly to the program's 
+prompt inputs.
