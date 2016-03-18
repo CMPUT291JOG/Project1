@@ -1,20 +1,18 @@
-# python3 Licence.py  -- Driver Licence Regestration -- For Project 1
-# edited: 15 Mar 2016 by Jen
-#########################################################
+# -------------------------------- Driver Licence Regestration -------------------------------#
 # General information:
 # Record information as needed to issue a drive licence 
 # licence no.CHAR(15), sin CHAR(15), class VARCHAR(10), photo BLOB,
 # issuing_date DATE, expiring_date DATE, 
 # PRIMARY KEY (licence_no), UNIQUE (sin), FOREIGN KEY (sin) REFERENCES people
 # assume image files are stored in a local disk system
-#########################################################
+#--------------------------------------------------------------------------------------------#
 # Specific Requirement:   
 # -Register a new driver license (with photo) where the person does not exist in the database.
 # -New person should be added.
 # -Add driver license for an existing person in database.
 # -Add driver license of a person who already has a license. An error message should be shown.
 # Note: Most python code are referenced from lab files
-########################################################
+#--------------------------------------------------------------------------------------------#
 # function for inputting licence registration
 def licence_main(cur):
 
