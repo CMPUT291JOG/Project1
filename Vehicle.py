@@ -195,9 +195,9 @@ def vehicle_input(cur):
 			continue
 		else:
 			break
-		
+	# successfully input data	
 	print("Input Successfull!")
-	
+	# check with user for inputting another vehicle
 	while True:
 		try_again = input("Do you want to input another vehichle? (y/n)")
 		if try_again == 'y':
@@ -208,28 +208,31 @@ def vehicle_input(cur):
 		else:
 			print("invalid input") 
 
-
+# function for inputting a person
 def person_input(cur, sin):
 	
+	# try to get input of the person's name in 15 characters or less
 	name = input('Enter Name: ')
 	while len(name) > 15:
 		print('Invalid Name format [max 15 char]')
-		sin = input('Enter Name: ')
-	
+		name = input('Enter Name: ')
+	# try to get input for height in 8 character or less
 	while True:
 		height = input('Enter registrants height: ')
+		# if more than 8 characters, print error
 		if len(height) > 8:
 			print("invalid input")
 			continue
+		# otherwise try converting it to float format
 		else:
 			try: 
 				float(height)
+			# if failed, print error
 			except ValueError: 
 				print('Invalid height format')
 				continue
 			break
-
-	
+	# try to get input weight in 8 characters or less
 	while True:
 		weight = input('Enter registrants weight: ')
 		if len(weight) > 8:
@@ -242,27 +245,27 @@ def person_input(cur, sin):
 				print('Invalid height format')
 				continue
 			break
-		  
+	# try to get eyecolor in 10 characters or less	  
 	eyecolor = input('Enter registrants eye color: ')
 	while len(eyecolor) > 10:
 		print('Invalid eyecolor format [max 10 char]')
 		eyecolor = input('Enter registering eye color: ')
-		
+	# try to get hair color in 15 characters or less		
 	haircolor = input('Enter registrants hair color: ')
 	while len(haircolor) > 15:
 		print('Invalid hair color format [max 15 char]')
 		haircolor = input('Enter registrants hair color: ')
-		
+	# try to get address in 50 characters or less		
 	addr = input('Enter registrants address: ')
 	while len(addr) > 50:
 		print('Invalid address format [only 50 characters]')
 		addr = input('Enter registrants address: ')
-	  
+	# try to get gender in m or f	  
 	gender = input('Enter registrants gender [m/f]: ')
 	while ((gender != 'm') and (gender != 'f')):
 		print('Invalid gender format [m/f]')
 		gender = input('Enter registrants gender [m/f]: ')
-	  
+	# try to get birthday in 8 characters	  
 	birthday = input('Enter registrants birthday [ddmmyyyy]: ')
 	while len(birthday) != 8:
 		print('Invalid birthday format [ddmmyyyy]')
@@ -274,9 +277,11 @@ def person_input(cur, sin):
 	# inputting into database
 	sqlStr = 'INSERT INTO people VALUES(:sin, :name, :height, :weight, :eyecolor, :haircolor, :addr, :gender, :birthday)'
 	
+	# try execute query to insert values into people
 	try:
 		cur.execute (sqlStr, {'sin':sin, 'name':name, 'height':height, 'weight':weight, 'eyecolor':eyecolor, 'haircolor':haircolor, 'addr':addr, 'gender':gender, 'birthday':birthday})
 		cur.execute ("commit")
+	# if failed, print error message
 	except cx_Oracle.DatabaseError as exc:
 		error = exc.args[0]
 		print( sys.stderr, "Oracle code:", error.code)
