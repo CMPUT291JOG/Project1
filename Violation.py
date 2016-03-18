@@ -143,7 +143,7 @@ def violation_input(cur):
 				print("invalid input")
 	
 	print("Input Successfull!")
-	
+	# check with user for inptting another entry
 	while True:
 		try_again = input("Do you want to input another? (y/n)")
 		if try_again == 'y':
