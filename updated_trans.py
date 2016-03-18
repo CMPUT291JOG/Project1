@@ -69,9 +69,7 @@ def trans_main(cur):
      rows = cur.fetchall()
      if rows == 0:
 	  print("Error, seller does not match owner")
-	  return
-     # scenerio 3, vehicle not in database
-     
+	  return     
 	  
 def transaction_input(cur): 
      # create and initialize variables

@@ -29,7 +29,7 @@ def licence_main(cur):
 	print('Invalid SIN input.')
 	sin = input ('Enter Social insurance number: ')
 	
-    check = "SELECT * FROM driver_licence WHERE SIN = sin" 
+    check = "SELECT  licence_no FROM driver_licence WHERE SIN = :sin" 
     cur.execute(check)   
     rows = cur.fetchall()
     
