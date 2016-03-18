@@ -11,7 +11,6 @@
 #  office_no     CHAR(15),    vtype          CHAR(10),      vdate             date,
 #  place        varchar(20),  descriptions varchar(1024),
 #--------------------------------------------------------------------------------------------
-import cx_oracle
 
 # function for inputting violation record
 def violation_input(cur):
@@ -27,6 +26,24 @@ def violation_input(cur):
 			continue
 		break
 	
+	ticketexists = "SELECT ticket_no FROM ticket WHERE ticket_no = '%s'" % (ticket_no)
+	# execute query to match violator and SIN
+	cur.execute(ticketexists)	
+	# get data
+	ticketexists = cur.fetchall()
+	
+	# while return empty, sin not match
+	while len(ticketexists) == 0:
+		# print error message for sin not match 
+		print('Ticket Number exist, try again')
+		# request violator_no again until correct and exit while loop
+		violator_no = input('Enter Ticket Number: ')
+		ticketexists = "SELECT ticket_no FROM ticket WHERE ticket_no = '%s'" % (ticket_no)
+		# execute query to match violator and SIN
+		cur.execute(ticketexists)	
+		# get data
+		ticketexists = cur.fetchall()	
+	
 	# get violator_no which contains 15 or less character
 	# keep looping until getting the proper format
 	violator_no = input('Enter Violator Number: ')
@@ -35,9 +52,9 @@ def violation_input(cur):
 		violator_no = input('Enter Violator Number: ')
 	
 	# check if violator_no is a valid SIN and for which if it already exists
-	valid_people = 'SELECT sin FROM people WHERE sin = :sin'
+	valid_people = "SELECT sin FROM people WHERE sin = '%s'" % (violator_no)
 	# execute query to match violator and SIN
-	cur.execute(valid_people, {'sin', violator_no})
+	cur.execute(valid_people)	
 	# get data
 	valid_people = cur.fetchall()
 	
@@ -47,8 +64,8 @@ def violation_input(cur):
 		print('Violator Number doesnt exist, try again [must be registered sin number]')
 		# request violator_no again until correct and exit while loop
 		violator_no = input('Enter Violator Number: ')
-		valid_people = 'SELECT sin FROM people WHERE sin = :sin'
-		cur.execute(valid_people, {'sin', violator_no})
+		valid_people = "SELECT sin FROM people WHERE sin =  '%s'" % (violator_no)
+		cur.execute(valid_people)
 		valid_people = cur.fetchall()
 
 	# get vehicle_id for charater 15 or less	
@@ -58,14 +75,14 @@ def violation_input(cur):
 		vehicle_id = input('Enter Vehicle Identification: ')
 		
 	# making sure vehicle id is extant serial no
-	serials = 'SELECT serial_no FROM vehicle WHERE serial_no = :serial_no'
-	cur.execute(serials, {'serial_no', vehicle_id})
+	serials = "SELECT serial_no FROM vehicle WHERE serial_no = '%s'" % (vehicle_id)
+	cur.execute(serials)
 	inDb = cur.fetchall()
-	while inDb == 0:
+	while len(inDb) == 0:
 		print('Vehicle ID Number doesnt exist, try again [must be registered serial number]')
 		vehicle_id = input('Enter vehicle ID: ')
-		serials = 'SELECT serial_no FROM vehicle WHERE serial_no = :serial_no'
-		cur.execute(serials, {'serial no', vehicle_id})
+		serials = "SELECT serial_no FROM vehicle WHERE serial_no = '%s'" % (vehicle_id)
+		cur.execute(serials)
 		inDb = cur.fetchall()
 	
 	# input office_no for number  15 or less	
@@ -77,7 +94,7 @@ def violation_input(cur):
 	# input violation type with 10 or less number	 
 	vtype = input('Enter Violation Type: ')
 	while len(vtype) > 10:
-		print('Invalid Officer Number Format [too long]')
+		print('Invalid Violation Type [too long]')
 		vtype = input('Enter Violation Type: ')
 	
 	# input violation date length less than 8	
@@ -102,11 +119,12 @@ def violation_input(cur):
 	vdate = datetime.datetime.strptime(vdate, "%d%m%Y").date()
 	
 	# insert statement
-	sqlstr = "INSERT INTO ticket VALUES(:ticket_no, :violator_no, :vehicle_id, :office_no, :vtype, :vdate, :place, :descriptions"
+	sqlstr = "INSERT INTO ticket VALUES(:ticket_no, :violator_no, :vehicle_id, :office_no, :vtype, :vdate, :place, :descriptions)"
 	
 	# try execute sql insert statment
 	try:
-		curs.execute(sqlstr, {'ticket_no':ticket_no, 'violator_no':violator_no, 'vehicle_id':vehicle_id, 'office_no':office_no, 'vtype':vtype, 'vdate':vdate, 'place':place, 'descriptions':descriptions})
+		cur.execute(sqlstr, {'ticket_no':ticket_no, 'violator_no':violator_no, 'vehicle_id':vehicle_id, 'office_no':office_no, 'vtype':vtype, 'vdate':vdate, 'place':place, 'descriptions':descriptions})
+		cur.execute("commit")
 	# if fail, print errors	
 	except cx_Oracle.DatabaseError as exc:
 		error = exc.args[0]
@@ -135,4 +153,3 @@ def violation_input(cur):
 			return
 		else:
 			print("invalid input")  	
-
