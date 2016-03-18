@@ -1,20 +1,12 @@
-# Auto Transaction - allows the officer to enter infomaion to complete the transaction
+# ------------------------- Auto Transaction  ----------------------#
+# allows the officer to enter infomaion to complete the transaction
 # w.r.t the details of seller, buyer, date and price
-######################################
-# General
-#  s_date      date,
-#  price       numeric(9,2),
-#  t_id        CHAR(15),
-#  seller_id   CHAR(15),
-#  buyer_id    CHAR(15),
-#  vehicle_id  CHAR(15),
-#  officer_id  CHAR(15),
-#  PRIMARY KEY (t_id),
-#  FOREIGN KEY (seller_id) REFERENCES people(sin),
-#  FOREIGN KEY (buyer_id) REFERENCES people(sin),
-#  FOREIGN KEY (vehicle_id) REFERENCES vehicle(serial_no),
-#  FOREIGN KEY (officer_id) REFERENCES registering_officer(id)
-#########################################
+# --------------------------------------------------------------------#
+# Auto Transaction has attributes as following:
+#  s_date  date,  	price  numeric(9,2),    t_id    CHAR(15),
+#  seller_id   CHAR(15), 	  buyer_id    CHAR(15),
+#  vehicle_id  CHAR(15),	  officer_id  CHAR(15),
+#----------------------------------------------------------------------#  
 # Scenerio
 # 1) Add a sale record where buyer does not exist in the database
 # a new person should be added after asking appropriate information.
@@ -22,7 +14,7 @@
 # an appropriate error message should be shown.
 # 3) Add a sale record where vehicle does not exist in the database
 # an appropriate message should be displayed.
-# Jen
+#----------------------------------------------------------------------#
 def trans_main(cur):
      # get buyer id and make sure less than 15 characters
      buyer_id = input ('Enter buyer ID: ')
@@ -146,14 +138,14 @@ def transaction_input(cur):
 	  while len(office_id) > 15:
 	       print('Invalid officer ID.')
 	       officer_id = input ('Enter officer ID: ')
-	      
+	  # try to execute query    
 	  try:
 	       cur.execute (sqlStr, {s_date: s_date, price: price, t_id: t_id,
 	                             seller_id: seller_id, buyer_id: buyer_id,
 	                             vehicle_id: vehicle_id, officer_id: officer_id})
 	  except cx_Oracle.DatabaseError as exc:
 	       print ("Transaction already in database. \nNo new transaction created.")
-	  
+	  # check with user for inputting another transaction
 	  while True:
 	       try_again = input('Would you like to try inputing transaction? (y/n)')
 	       if try_again == y:
